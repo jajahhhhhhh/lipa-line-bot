@@ -100,19 +100,17 @@ def handle_message(event):
 
     save_data(data)
 
+    # Quiet mode: reply only when a keyword is matched; stay silent otherwise
     if found_keywords:
         reply = 'Keywords: ' + ', '.join(found_keywords) + ' - saved!'
-    else:
-        reply = 'Received: ' + text
-
-    with ApiClient(configuration) as api_client:
-        line_bot_api = MessagingApi(api_client)
-        line_bot_api.reply_message_with_http_info(
-            ReplyMessageRequest(
-                reply_token=event.reply_token,
-                messages=[TextMessage(text=reply)]
+        with ApiClient(configuration) as api_client:
+            line_bot_api = MessagingApi(api_client)
+            line_bot_api.reply_message_with_http_info(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(text=reply)]
+                )
             )
-        )
 
 
 if __name__ == '__main__':
